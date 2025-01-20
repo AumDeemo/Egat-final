@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  fullname  String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model material {
+  id            Int             @id @default(autoincrement())
+  name          String
+  partnumber    String?
+  totalAmount   Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  imageUrl      String?
+  category      String?
+  exportHistory ExportHistory[]
+  importHistory ImportHistory[]
+}
+
+model ImportHistory {
+  id         Int      @id @default(autoincrement())
+  materialId Int
+  quantity   Float
+  date       DateTime @default(now())
+  materials  material @relation(fields: [materialId], references: [id])
+}
+
+model ExportHistory {
+  id         Int      @id @default(autoincrement())
+  materialId Int
+  quantity   Float
+  date       DateTime @default(now())
+  materials  material @relation(fields: [materialId], references: [id])
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+}
+
+model FileOid {
+  id        Int      @id @default(autoincrement())
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+}
+
+model FilePR {
+  id        Int      @id @default(autoincrement())
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+}
+
+model FilePO {
+  id        Int      @id @default(autoincrement())
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+}
+
+model Machine {
+  id        Int      @id @default(autoincrement())
+  name      String
+  brand     String
+  model     String
+  capacity  String
+  createdAt DateTime @default(now())
+  carNum    String
+  carry     String
+  image     String?
+  num       String
+}
+
+model hireFilePR {
+  id        Int      @id @default(autoincrement())
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+}
+
+model hireFilePO {
+  id        Int      @id @default(autoincrement())
+  name      String
+  path      String
+  createdAt DateTime @default(now())
+}
+
+model curu {
+  id           Int       @id @default(autoincrement())
+  name         String?
+  createdAt    DateTime  @default(now())
+  brand        String?
+  curunumber   String
+  date         DateTime?
+  detial       String
+  detialnumber String?
+  imageUrl     String?
+  number       Int?
+  partnumber   String
+  updatedAt    DateTime  @updatedAt
+  usenumber    String?
+}
+
+model using1 {
+  id           Int       @id @default(autoincrement())
+  number       Int?
+  name         String?
+  curunumber   String
+  partnumber   String
+  brand        String?
+  usenumber    String?
+  detial       String
+  detialnumber String?
+  date         DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  imageUrl     String?
+}
+
+model using10000 {
+  id           Int       @id @default(autoincrement())
+  number       Int?
+  name         String?
+  curunumber   String
+  partnumber   String
+  brand        String?
+  usenumber    String?
+  detial       String
+  detialnumber String?
+  date         DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  imageUrl     String?
+}
+
+model Forklift {
+  id        Int      @id @default(autoincrement())
+  name      String
+  brand     String
+  model     String
+  num       String
+  capacity  String
+  carry     String
+  carNum    String
+  image     String?
+  createdAt DateTime @default(now())
+}

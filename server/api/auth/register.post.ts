@@ -1,0 +1,44 @@
+//server/api/auth/register.post.ts
+
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+
+const prisma = new PrismaClient();
+
+export default defineEventHandler(async (event) => {
+    const { username, password, confirmPassword, fullname } = await readBody(event);
+
+    if (password !== confirmPassword) {
+        throw createError({
+            statusCode: 400,
+            message: 'รหัสผ่านไม่เหมือนกัน',
+        });
+    }
+
+    const existingUser = await prisma.user.findUnique({
+        where: { username },
+    });
+
+    if (existingUser) {
+        throw createError({
+            statusCode: 400,
+            message: 'ผู้ใช้นี้มีอยู่ในระบบแล้ว',
+        });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const newUser = await prisma.user.create({
+        data: {
+            username,
+            password: hashedPassword,
+            fullname,
+        },
+    });
+
+    return {
+        message: 'User registered successfully',
+        user: newUser,
+    };
+});
