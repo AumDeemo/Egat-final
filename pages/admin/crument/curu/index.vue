@@ -72,7 +72,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="curu in filteredCURU" key="curu.id">
+                <tr v-for="curu in paginatedCURU" key="curu.id">
                   <th data-label="ลำดับ">{{ curu.number }}</th>
                   <td data-label="รูปภาพ">
                     <!-- แสดงรูปภาพถ้ามี URL -->
@@ -126,6 +126,23 @@
             </table>
           </div>
         </div>
+      </div>
+      <div class="text-center">
+        <button
+          class="bg-orange-400 p-2 mt-4 rounded-xl"
+          @click="goToPage(currentPage - 1)"
+          :disabled="currentPage === 1"
+        >
+          ก่อนหน้า
+        </button>
+        <span class="mx-4">หน้า {{ currentPage }} จาก {{ totalPages }}</span>
+        <button
+          class="bg-orange-500 p-2 mt-4 rounded-xl"
+          @click="goToPage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+        >
+          ถัดไป
+        </button>
       </div>
 
       <!-- Modals -->
@@ -405,6 +422,8 @@ const selectedImage = ref(null);
 const sortKey = ref("number"); // ค่าเริ่มต้นคือจัดเรียงตาม "number"
 const sortOrder = ref("asc"); // "asc" คือจากน้อยไปมาก, "desc" คือจากมากไปน้อย
 const previewImageUrl = ref(null);
+const currentPage = ref(1); // หน้าปัจจุบัน
+const itemsPerPage = ref(10); // จำนวนรายการต่อหน้า
 
 const MODAL_TYPES = {
   DETAILS: "details",
@@ -456,6 +475,21 @@ const fetchCURU = async () => {
   } catch (err) {
     console.error("แสดงข้อมูลอะไหล่ไม่สำเร็จ:", err);
     alert(`เกิดข้อผิดพลาด: ${err.message}`);
+  }
+};
+const paginatedCURU = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredCURU.value.slice(start, end); //
+});
+
+const totalPages = computed(() =>
+  Math.ceil(filteredCURU.value.length / itemsPerPage.value)
+);
+
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
   }
 };
 
@@ -574,6 +608,10 @@ const closeModal = () => {
 onMounted(async () => {
   await fetchCURU();
   console.log("CURU Data:", CURU.value);
+});
+
+definePageMeta({
+  middleware: "check-role",
 });
 </script>
 

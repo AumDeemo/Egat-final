@@ -64,6 +64,10 @@ onMounted(async () => {
   console.log('data', users.value);
 
 })
+
+definePageMeta({
+  middleware: 'check-role'
+})
 </script>
 
 <style scoped>

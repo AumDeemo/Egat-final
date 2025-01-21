@@ -46,4 +46,8 @@ const handleUpload = async () => {
     message.value = 'Error uploading file.';
   }
 };
+
+definePageMeta({
+  middleware: 'check-role'
+})
 </script>

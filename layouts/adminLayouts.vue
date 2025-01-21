@@ -289,6 +289,7 @@ import { LogoutIcon } from "@vue-hero-icons/outline";
 import { useAuthStore } from "#build/imports";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 const route = useRoute();
@@ -301,7 +302,7 @@ const hamburgerMenuRef = ref(null); // สำหรับ Hamburger Menu
 const desktopMenuRef = ref(null); // สำหรับเมนูย่อยหน้าจอปกติ
 
 // ตัวแปรจัดการชื่อเมนูที่กด
-const selectedMenu = ref("รายการอะไหล่");
+const selectedMenu = ref("📊 ภาพรวมระบบ");
 
 const toggleMobileNav = () => {
   mobileNavOpen.value = !mobileNavOpen.value;
@@ -450,8 +451,7 @@ const closeModal = () => {
 
 const logoutAndRedirect = async () => {
   try {
-    await authStore.logout(); // ล็อกเอาต์
-    router.push("/login"); // เปลี่ยนเส้นทางไปยังหน้าล็อกอิน
+    await authStore.logout();
   } catch (error) {
     console.error("Error logging out:", error);
   }

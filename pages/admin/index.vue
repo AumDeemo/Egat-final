@@ -67,8 +67,6 @@ const fetchSummaryData = async () => {
   }
 };
 
-
-
 // อัปเดตข้อมูลแบบอัตโนมัติ
 const startAutoUpdate = () => {
   intervalId.value = setInterval(fetchSummaryData, 10000); // อัปเดตทุก 10 วินาที
@@ -84,6 +82,10 @@ onUnmounted(() => {
   if (intervalId.value) {
     clearInterval(intervalId.value);
   }
+});
+
+definePageMeta({
+  middleware: "check-role",
 });
 </script>
 
@@ -110,9 +112,6 @@ onUnmounted(() => {
         <!-- Text -->
         <div>
           <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide">Dashboard</h1>
-          <p class="text-base md:text-lg mt-1 tracking-wide">
-            ภาพรวมสถานะระบบจัดการอะไหล่
-          </p>
         </div>
       </div>
 
