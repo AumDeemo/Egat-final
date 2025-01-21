@@ -247,6 +247,10 @@ const addMachine = async () => {
 onMounted(() => {
   fetchMachines();
 });
+
+definePageMeta({
+  middleware: 'check-role'
+})
 </script>
 
 <style scoped>

@@ -1,6 +1,5 @@
 <script setup>
-
-navigateTo('/login')
+navigateTo('/users')
 </script>
 
 <template>

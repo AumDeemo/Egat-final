@@ -325,6 +325,10 @@ const deleteMachine = async (id) => {
 };
 
 onMounted(fetchMachines);
+
+definePageMeta({
+  middleware: 'check-role'
+})
 </script>
 
 <style scoped>

@@ -47,6 +47,10 @@ const exportToPDF = () => {
   doc.text(lines, 10, 10);
   doc.save("exported-file.pdf");
 };
+
+definePageMeta({
+  middleware: 'check-role'
+})
 </script>
 
 <style scoped>

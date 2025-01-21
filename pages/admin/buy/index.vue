@@ -242,6 +242,10 @@ onMounted(async () => {
   console.log("dataPR : ", prFiles.value);
   console.log("dataPO : ", poFiles.value);
 });
+
+definePageMeta({
+  middleware: 'check-role'
+})
 </script>
 
 <template>

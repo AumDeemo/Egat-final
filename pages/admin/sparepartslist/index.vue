@@ -19,6 +19,8 @@ const isImageModalOpen = ref(false); // สถานะเปิด/ปิดโ
 const modalImageUrl = ref(""); // เก็บ URL ของรูปภาพที่เลือก
 const previewImageUrl = ref(null);
 const isNewNotification = ref(false); // สถานะสำหรับตรวจสอบว่ามีการแจ้งเตือนใหม่หรือไม่
+const currentPage = ref(1); // หน้าปัจจุบัน
+const itemsPerPage = ref(10); // จำนวนรายการต่อหน้า
 
 // ฟังก์ชันแจ้งเตือนใหม่
 const addNotification = (notification) => {
@@ -29,6 +31,22 @@ const addNotification = (notification) => {
   setTimeout(() => {
     isNewNotification.value = false;
   }, 1000); // 1 วินาที
+};
+
+const paginatedMaterials = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredMaterials.value.slice(start, end); // ใช้ `filteredMaterials` ในกรณีที่มีการค้นหา/กรอง
+});
+
+const totalPages = computed(() =>
+  Math.ceil(filteredMaterials.value.length / itemsPerPage.value)
+);
+
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
 };
 
 // ฟังก์ชันเปิดโมดอลแสดงรูปภาพ
@@ -323,6 +341,10 @@ const handleDeleteMaterial = async () => {
 onMounted(async () => {
   await Promise.all([fetchCategories(), fetchMaterials()]);
 });
+
+definePageMeta({
+  middleware: "check-role",
+});
 </script>
 
 <template>
@@ -559,7 +581,7 @@ onMounted(async () => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(material, index) in filteredMaterials" :key="material.id">
+                <tr v-for="(material, index) in paginatedMaterials" :key="material.id">
                   <th data-label="ลำดับ">{{ index + 1 }}</th>
                   <td data-label="รูปภาพ">
                     <!-- แสดงรูปภาพถ้ามี URL -->
@@ -934,6 +956,23 @@ onMounted(async () => {
             </button>
           </div>
         </div>
+      </div>
+      <div class="text-center">
+        <button
+          class="bg-orange-400 p-2 mt-4 rounded-xl"
+          @click="goToPage(currentPage - 1)"
+          :disabled="currentPage === 1"
+        >
+          ก่อนหน้า
+        </button>
+        <span class="mx-4">หน้า {{ currentPage }} จาก {{ totalPages }}</span>
+        <button
+          class="bg-orange-500 p-2 mt-4 rounded-xl"
+          @click="goToPage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+        >
+          ถัดไป
+        </button>
       </div>
     </div>
   </adminLayouts>
